@@ -1,7 +1,7 @@
 /********************************
 	Homework #1
-	Due: 1/29/19
-	Graham Laird and Finn Allen
+	Due: 1/31/19
+	Graham Laird and Finnian Allen
  ********************************/
 package hw1;
 import java.util.Random;
