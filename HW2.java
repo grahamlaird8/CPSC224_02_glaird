@@ -31,12 +31,12 @@ public class HW2 {
 	
 	public static String getWordFromUser()
 	{
-		
+		//Finn
 	}
 	
 	public static char getLetterFromUser()
 	{
-		
+		//Finn
 	}
 	
 	public static void printWordInProgress(String& inProgressWord, char guess, int sizeOfWord)
