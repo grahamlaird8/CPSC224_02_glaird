@@ -41,12 +41,12 @@ public class HW2 {
 	
 	public static void printWordInProgress(String& inProgressWord, char guess, int sizeOfWord)
 	{
-		
+		//Graham
 	}
 	
 	public static boolean checkGuess(String word, char guess, int sizeOfWord)
 	{
-		
+		//Graham
 	}
     
 	public static void updateGuessList(char[] guesses, char guess)
