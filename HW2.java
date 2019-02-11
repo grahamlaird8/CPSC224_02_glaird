@@ -31,37 +31,37 @@ public class HW2 {
 	
 	public static String getWordFromUser()
 	{
-		
+		//Finn
 	}
 	
 	public static char getLetterFromUser()
 	{
-		
+		//Finn
 	}
 	
 	public static void printWordInProgress(String& inProgressWord, char guess, int sizeOfWord)
 	{
-		
+		//Graham
 	}
 	
 	public static boolean checkGuess(String word, char guess, int sizeOfWord)
 	{
-		
+		//Graham
 	}
     
 	public static void updateGuessList(char[] guesses, char guess)
 	{
-		
+		//Graham
 	}
 	
 	public static void printBody(int numWrongGuesses)
 	{
-		
+		//Finn
 	}
 	
 	public static boolean gameOver(int numWrongGuesses, String wordInProgress, String correctWord)
 	{
-		
+		//Graham
 	}
 	
 	
