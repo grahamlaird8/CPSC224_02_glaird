@@ -28,13 +28,6 @@ class DrawPanel extends JPanel implements ActionListener
     private int delay = 10;
     protected Timer timer;
 
-    private int x = 0;		// x position
-    private int y = 0;		// y position
-    private int radius = 15;	// ball radius
-
-    private int dx = 2;		// increment amount (x coord)
-    private int dy = 2;		// increment amount (y coord)
-
     public DrawPanel()
     {
         timer = new Timer(delay, this);
@@ -59,10 +52,6 @@ class DrawPanel extends JPanel implements ActionListener
         //if (y < radius)			dy = Math.abs(dy);
         //if (y > getHeight() - radius)	dy = -Math.abs(dy);
 
-        // adjust ball position
-        //x += dx;
-        //y += dy;
-        //g.fillOval(x - radius, y - radius, radius*2, radius*2);
         g.setColor(new Color(149, 200, 216)); // sky blue
         g.fillRect(0, 0, 500, 500); // sky
 
