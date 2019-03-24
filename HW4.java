@@ -25,7 +25,7 @@ public class HW4 extends JFrame{
 	private int mouseY = 250; // Mouse cursor's X position
 	private int clickedX;
 	private int clickedY;
-	private boolean clicked;
+	private boolean clicked = true;
 	private boolean parallaxActive;
 
 
@@ -54,9 +54,14 @@ public class HW4 extends JFrame{
 
 		public void mouseClicked(MouseEvent e)
 		{		
-			clicked = true;
-			clickedX = e.getX();
-			clickedY = e.getY();
+			if(!clicked)
+            {
+				clicked = true;
+            }
+            else
+            {
+                clicked = false;
+            }
 		}
 
 		public void mouseReleased(MouseEvent e)
@@ -106,7 +111,10 @@ public class HW4 extends JFrame{
     public void actionPerformed(ActionEvent e)
     // will run when the timer fires
     {
-        repaint();
+        if(clicked)
+		{
+			repaint();
+		}
     }
 
     // draw rectangles and arcs
