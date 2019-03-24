@@ -1,3 +1,5 @@
+package hw4;
+
 import java.awt.event.*;
 import java.awt.Graphics;
 import java.awt.Color;
@@ -43,7 +45,7 @@ class DrawPanel extends JPanel implements ActionListener
     // draw rectangles and arcs
     public void paintComponent( Graphics g )
     {
-        super.paintComponent( g ); // call superclass's paintComponent
+        super.paintComponent(g); // call superclass's paintComponent
 
 
         // check for boundaries
@@ -54,6 +56,17 @@ class DrawPanel extends JPanel implements ActionListener
 
         g.setColor(new Color(149, 200, 216)); // sky blue
         g.fillRect(0, 0, 500, 500); // sky
+        
+        g.setColor(Color.yellow); // sun yellow
+        g.fillOval(375, 50, 100, 100); // sun
+        
+        g.setColor(new Color(148,0,211)); // mountain purple
+        g.fillPolygon(new int[] {175, 275, 350}, new int[] {400, 150, 400}, 3); // mountain 1
+        g.setColor(new Color(199,234,70)); // mountain green
+        g.fillPolygon(new int[] {0, 150, 300}, new int[] {400, 200, 400}, 3); // mountain 2
+        g.setColor(new Color(204,85,0)); // mountain orange
+        //g.fillPolygon(new int[] {250, 375, 500}, new int[] {400, 200, 400}, 3); // mountain 3
+        g.fillPolygon(new int[] {150, 400, 500}, new int[] {500, 200, 400}, 3); // mountain 3
 
         g.setColor(new Color(126, 200, 80)); // grass green
         g.fillRect(0, 400, 500, 100); // grass/ground
