@@ -70,17 +70,43 @@ public class HW4 extends JFrame{
 	{
 		public void mouseDragged(MouseEvent e)
 		{
+			JOptionPane.showMessageDialog(null, "Mouse Dragged");
 		}
 
 		public void mouseMoved(MouseEvent e)
 		{	    
+			mouseX = e.getX();
+			mouseY = e.getY();
 		}
 	}
    
-	private class MyActionListener implements ActionListener
-	{
-		public void actionPerformed(ActionEvent e)
-		{
-		}     
-	}
+	class DrawPanel extends JPanel implements ActionListener
+{
+    private int delay = 10;
+    protected Timer timer;
+
+    public DrawPanel()
+    {
+        timer = new Timer(delay, this);
+        timer.start();		// start the timer
+    }
+
+    public void actionPerformed(ActionEvent e)
+    // will run when the timer fires
+    {
+        repaint();
+    }
+
+    // draw rectangles and arcs
+    public void paintComponent( Graphics g )
+    {
+        super.paintComponent( g ); // call superclass's paintComponent
+
+        g.setColor(new Color(149, 200, 216)); // sky blue
+        g.fillRect(0, 0, 500, 500); // sky
+
+        g.setColor(new Color(126, 200, 80)); // grass green
+        g.fillRect(0, 400, 500, 100); // grass/ground
+    }
+
 }
