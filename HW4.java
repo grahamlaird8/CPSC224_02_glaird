@@ -111,45 +111,83 @@ public class HW4 extends JFrame{
     public void actionPerformed(ActionEvent e)
     // will run when the timer fires
     {
-        if(clicked)
+        if(clicked && parallaxActive)
 		{
 			repaint();
 		}
     }
 
     // draw rectangles and arcs
-    public void paintComponent( Graphics g )
+    public void paintComponent(Graphics g)
     {
-        xDifference = mouseX - (WINDOW_WIDTH / 2);
-        yDifference = mouseY - (WINDOW_HEIGHT / 2);
-        foregroundX = xDifference / 10;
-        midgroundX = xDifference / 20;
-        backgroundX = xDifference / 40;
-        foregroundY = yDifference / 10;
-        midgroundY = yDifference / 20;
-        backgroundY = yDifference / 40;
-        sunX = xDifference / 100;
-        sunY = yDifference / 100;
-		
+        calculateParallax();
         super.paintComponent(g); // call superclass's paintComponent
+        buildSunAndSky(g);
+        buildMountains(g);
+		buildGrassAndTrees(g);
+        
+    }
+	
+	public void buildMountains(Graphics g)
+	{
+		g.setColor(new Color(148,0,211)); // mountain purple
+        g.fillPolygon(new int[] {(125 + backgroundX), (275 + backgroundX), (400 + backgroundX)}, new int[] {(600 + backgroundY), (150 + backgroundY), (600 + backgroundY)}, 3); // mountain 1
+        g.setColor(new Color(199,234,70)); // mountain green
+        g.fillPolygon(new int[] {(-100 + midgroundX), (150 + midgroundX), (400 + midgroundX)}, new int[] {(600 + midgroundY), (200 + midgroundY), (600 + midgroundY)}, 3); // mountain 2
+        g.setColor(new Color(204,85,0)); // mountain orange
+        g.fillPolygon(new int[] {(50 + midgroundX), (400 + midgroundX), (600 + midgroundX)}, new int[] {(600 + midgroundY), (200 + midgroundY), (600 + midgroundY)}, 3); // mountain 3
+	}
+	
+	public void buildGrassAndTrees(Graphics g)
+	{
+		g.setColor(new Color(126, 200, 80)); // grass green
+        g.fillRect(0, (400 + foregroundY), 600, 100); // grass/ground
+		
+		g.setColor(new Color(126, 44, 31)); // wood brown
+        g.fillRect((450 + foregroundX), (360 + foregroundY), 20, 50); // tree trunk
+		g.setColor(Color.black); // wood brown
+        g.drawRect((450 + foregroundX), (360 + foregroundY), 20, 50); // tree trunk
 
+        g.setColor(new Color(103, 146, 103)); // leaf green
+        g.fillOval((435 + foregroundX), (300 + foregroundY), 50, 75); // tree top
+		g.setColor(Color.black); // leaf green
+        g.drawOval((435 + foregroundX), (300 + foregroundY), 50, 75); // tree top
+		
+		g.setColor(new Color(126, 44, 31)); // wood brown
+        g.fillRect((250 + foregroundX), (360 + foregroundY), 20, 50); // tree trunk
+		g.setColor(Color.black); // wood brown
+        g.drawRect((250 + foregroundX), (360 + foregroundY), 20, 50); // tree trunk
 
-        g.setColor(new Color(149, 200, 216)); // sky blue
+        g.setColor(new Color(103, 146, 103)); // leaf green
+        g.fillOval((235 + foregroundX), (300 + foregroundY), 50, 75); // tree top
+		g.setColor(Color.black); // leaf green
+        g.drawOval((235 + foregroundX), (300 + foregroundY), 50, 75); // tree top
+	}
+	
+	public void buildSunAndSky(Graphics g)
+	{
+		g.setColor(new Color(149, 200, 216)); // sky blue
         g.fillRect(0, 0, 500, 500); // sky
         
         g.setColor(Color.yellow); // sun yellow
         g.fillOval((375 + sunX), (50 + sunY), 100, 100); // sun
-        
-        g.setColor(new Color(148,0,211)); // mountain purple
-        g.fillPolygon(new int[] {(175 + backgroundX), (275 + backgroundX), (350 + backgroundX)}, new int[] {(400 + backgroundY), (150 + backgroundY), (400 + backgroundY)}, 3); // mountain 1
-        g.setColor(new Color(199,234,70)); // mountain green
-        g.fillPolygon(new int[] {(0 + midgroundX), (150 + midgroundX), (300 + midgroundX)}, new int[] {(400 + midgroundY), (200 + midgroundY), (400 + midgroundY)}, 3); // mountain 2
-        g.setColor(new Color(204,85,0)); // mountain orange
-        g.fillPolygon(new int[] {(150 + midgroundX), (400 + midgroundX), (500 + midgroundX)}, new int[] {(500 + midgroundY), (200 + midgroundY), (400 + midgroundY)}, 3); // mountain 3
-
-        g.setColor(new Color(126, 200, 80)); // grass green
-        g.fillRect(0, 400, 500, 100); // grass/ground
-    }
+		g.setColor(Color.black); // sun yellow
+        g.drawOval((375 + sunX), (50 + sunY), 100, 100); // sun
+	}
+	
+	public void calculateParallax()
+	{
+		xDifference = mouseX - (WINDOW_WIDTH / 2);
+        yDifference = mouseY - (WINDOW_HEIGHT / 2);
+        foregroundX = xDifference / 5;
+        midgroundX = xDifference / 12;
+        backgroundX = xDifference / 30;
+        foregroundY = yDifference / 5;
+        midgroundY = yDifference / 12;
+        backgroundY = yDifference / 30;
+        sunX = xDifference / 60;
+        sunY = yDifference / 60;
+	}
 
 }
 
