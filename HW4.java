@@ -1,5 +1,5 @@
 /**
-* @Authors: Finnian Allen and Graham Liard
+* @Authors: Finnian Allen and Graham Laird
 * Assignment: HW4
 * Due: 3/25 @ 11:59 PM
 */
@@ -21,7 +21,7 @@ public class HW4 extends JFrame{
 	private int backgroundX; // background's x position
 	private int foregroundY; // foreground's y position
 	private int midgroundY; // Mouse cursor's Y position
-	private int backgroundY; // background's Y position
+	private int backgroundY; // background's Y position.
     private int sunX; // sun x position
 	private int sunY; // sun y position
     private int xDifference; // for calculating difference in x needed for parallax
@@ -35,9 +35,10 @@ public class HW4 extends JFrame{
 	private boolean parallaxActive; // tells us if parallax is currently in use or inactive
 
 
-	/**
-	* This function is our constructor for the program.
-	*/
+	/** Constructor for the class
+	 *@pre None.
+	 *@post HW4 GUI (JFrame) has been created
+	 */ 
 	public HW4()
 	{
 		setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
@@ -53,22 +54,26 @@ public class HW4 extends JFrame{
 		setVisible(true);
 	}
     
-    /**
-      Private inner class to handle mouse events such as clicks.
-   */
-	
+    /** private inner class that handles mouse events
+	 *@pre None.
+	 *@post when a mouse event occurs, it is handled appropriately
+	 */ 
     private class MyMouseListener implements MouseListener
 	{
-		/**
-        Meathod to check if the mouse was pressed.
-	    */
+		/** Method to handle when the mouse is pressed. Here to not throw exception.
+		 *@pre None.
+		 *@post None
+		 *@param MouseEvent e
+		 */ 
 		public void mousePressed(MouseEvent e)
 		{
 		}
 		
-		/**
-        Meathod to check if the user has clicked the mouse.
-	    */
+		/** Method to handle when the mouse is clicked, toggles a boolean value
+		 *@pre None.
+		 *@post When the mouse is clicked, the boolean value is toggled
+		 *@param MouseEvent e
+		 */ 
 		public void mouseClicked(MouseEvent e)
 		{		
 			if(!clicked) // if the mouse hasn't been clicked
@@ -80,33 +85,58 @@ public class HW4 extends JFrame{
                 clicked = false;
             }
 		}
-
+		
+		/** Method to handle when the mouse is released. Here to not throw exception.
+		 *@pre None.
+		 *@post None
+		 *@param MouseEvent e
+		 */ 
 		public void mouseReleased(MouseEvent e)
 		{
 		}
-
+		
+		/** Method to handle when the mouse is on the screen, enables the parallax
+		 *@pre None.
+		 *@post When the mouse is on the screen, set the parallax boolean true
+		 *@param MouseEvent e
+		 */ 
 		public void mouseEntered(MouseEvent e)
 		{
 			parallaxActive = true; // activate the parallax
 		}
 
+		/** Method to handle when the mouse is off the screen, disables the parallax
+		 *@pre None.
+		 *@post When the mouse is off the screen, set the parallax boolean false
+		 *@param MouseEvent e
+		 */ 
 		public void mouseExited(MouseEvent e)
 		{
 			parallaxActive = false; // deactivate parallax
 		}
 	}
 
-   /**
-      Private inner class to handle mouse motion events.
-   */
-   
+	/** private inner class that handles mouse motion events
+	 *@pre None.
+	 *@post when a mouse motion event occurs, it is handled appropriately
+	 */ 
 	private class MyMouseMotionListener implements MouseMotionListener
 	{
+		/** Method to handle when the mouse is dragged by displaying a message letting the user know
+		 *@pre None.
+		 *@post When the mouse is dragged, display dialog saying that the mouse was dragged
+		 *@param MouseEvent e
+		 */ 
 		public void mouseDragged(MouseEvent e)
 		{
 			JOptionPane.showMessageDialog(null, "Mouse Dragged");
 		}
 
+		/** Method to handle when the mouse is dragged by updating the current location of the mouse
+		 *@pre: none
+		 *@post When the mouse is moved, update the X and Y coordinates of the mouse
+		 *@param MouseEvent e
+		 */ 
 		public void mouseMoved(MouseEvent e)
 		{	    
 			mouseX = e.getX(); // get the x value of the mouse
@@ -114,21 +144,30 @@ public class HW4 extends JFrame{
 		}
 	}
 	
-	/**
-      Private inner class to handle actions performed.
-    */
-   
+	/** private inner class that handles drawing (graphics) and the timer action listener
+	 *@pre None.
+	 *@post graphics are updated when apropriate
+	 */ 
 	class DrawPanel extends JPanel implements ActionListener
 	{
-		private int delay = 10; // set the timer delay for this class
+		private int delay = 1; // set the timer delay for this class
 		protected Timer timer;
 
+		/** Constructor for the class
+		 *@pre None.
+		 *@post timer object has been created and started
+		 */ 
 		public DrawPanel()
 		{
 			timer = new Timer(delay, this); //create the timer with delay
 			timer.start();		// start the timer
 		}
 
+		/** Method to handle when the timer fires
+		 *@pre: none
+		 *@post repaints the graphics when the timer fires
+		 *@param ActionEvent e
+		 */ 
 		public void actionPerformed(ActionEvent e)
 		// will run when the timer fires
 		{
@@ -138,9 +177,11 @@ public class HW4 extends JFrame{
 			}
 		}
 
-		/**
-        Meathod to build the scene and implament parallax.
-	    */
+		/** Method to paint the screen and implement the parallax
+		 *@pre: none
+		 *@post screen has been painted in relation to where the mouse is/last was on the screen
+		 *@param Graphics g
+		 */ 
 		public void paintComponent(Graphics g)
 		{
         calculateParallax(); // call to calculate parallax
@@ -152,9 +193,11 @@ public class HW4 extends JFrame{
 		buildGrassAndTrees(g); // call to create the foreground
 		}
     
-	    /**
-        Meathod to build birds on the screen with apropriate parallax.
-	    */
+	    /** Method to paint the birds
+		 *@pre: none
+		 *@post birds have been painted in relation to where the mouse is/last was on the screen
+		 *@param Graphics g
+		 */ 
         public void buildBirds(Graphics g)
         {
             g.setColor(Color.gray);
@@ -164,9 +207,11 @@ public class HW4 extends JFrame{
             g.fillPolygon(new int[] {(birdX + backgroundX), (birdX + backgroundX + 10), (birdX + backgroundX)}, new int[] {(170 + backgroundY), (165 + backgroundY), (160 + backgroundY)}, 3);
         }
 		
-		/**
-        Meathod to build mountains on the screen with apropriate parallax.
-	    */
+		/** Method to paint the Mountains
+		 *@pre: none
+		 *@post mountains have been painted in relation to where the mouse is/last was on the screen
+		 *@param Graphics g
+		 */ 
 		public void buildMountains(Graphics g)
 		{
             g.setColor(new Color(148,0,211)); // mountain purple
@@ -177,9 +222,11 @@ public class HW4 extends JFrame{
             g.fillPolygon(new int[] {(50 + midgroundX), (400 + midgroundX), (600 + midgroundX)}, new int[] {(600 + midgroundY), (200 + midgroundY), (600 + midgroundY)}, 3); // mountain 3
         }
 		
-		/**
-        Meathod to build mountains on the screen with apropriate parallax.
-	    */
+		/** Method to paint the Grass and Trees
+		 *@pre: none
+		 *@post trees have been painted in relation to where the mouse is/last was on the screen
+		 *@param Graphics g
+		 */ 
 		public void buildGrassAndTrees(Graphics g)
 		{
             g.setColor(new Color(126, 200, 80)); // grass green
@@ -206,9 +253,11 @@ public class HW4 extends JFrame{
             g.drawOval((235 + foregroundX), (300 + foregroundY), 50, 75); // tree top2 outline
 		}
 	
-		/**
-        Meathod to build the sky and sun on the screen with apropriate parallax.
-	    */
+		/** Method to paint the sun and sky
+		 *@pre: none
+		 *@post sun has been painted in relation to where the mouse is/last was on the screen
+		 *@param Graphics g
+		 */ 
 		public void buildSunAndSky(Graphics g)
 		{
             g.setColor(new Color(149, 200, 216)); // sky blue
@@ -220,9 +269,11 @@ public class HW4 extends JFrame{
             g.drawOval((375 + sunX), (50 + sunY), 100, 100); // sun outline
 		}
 	
-		/**
-        Meathod to calculatye the parallax for wach possible x and y value and store them in private variables.
-	    */
+		/** Method to calculate the parallax movement for each section of the scene
+		 *@pre: none
+		 *@post variables that hold the parallax movement for each section has been calculated based on the mouse position
+		 *@param Graphics g
+		 */ 
 		public void calculateParallax()
 		{
             xDifference = mouseX - (WINDOW_WIDTH / 2);
@@ -237,24 +288,27 @@ public class HW4 extends JFrame{
             sunY = yDifference / 60; // sets the sun's y
 		}
         
-		/**
-        Meathod to either incrament the bird's x position or decerease it based on if the birds have
-		safely left the screens view or not.
-	    */
+		/** Method to calculate the position of the bird
+		 *@pre: none
+		 *@post birds position has been reset if off the screen
+		 *@param Graphics g
+		 */ 
         public int calculateBirdPosition()
         {
             if(birdX > 600) // if the birds are well off the screen
                 birdX = -10; // reset the birds to 10 pixels left of the screen
             else
-                birdX++; // incrament the birds
+                birdX++; // increment the birds
             return birdX;
         }
 
-}
+}	
 
-	/**
-    Main Meathod.
-	*/
+	/** Main method
+	 *@pre: none
+	 *@post GUI object has been created
+	 *@param String[] args
+	 */ 
 	public static void main(String[] args) 
 	{
         new HW4();
