@@ -5,12 +5,12 @@
  */
 package finalproject;
 
-
-import java.sql.*;
 /**
  *
- * @author graha
+ * @author Finni
  */
+import java.sql.*;
+
 public class Database {
 
     public static void createTable() {
@@ -77,10 +77,10 @@ public class Database {
             while (rs.next()) {
                 assignment[i].setUser(rs.getString("user"));
                 assignment[i].setName(rs.getString("name"));
-                assignment[i].setClass(rs.getString("class"));
+                assignment[i].setSubject(rs.getString("class"));
                 assignment[i].setDueDate(rs.getInt("duedate"));
                 assignment[i].setReminderDate(rs.getInt("reminderdate"));
-                assignment[i].setUser(rs.getString("description"));
+                assignment[i].setDescription(rs.getString("description"));
                 
                 i++;
             }

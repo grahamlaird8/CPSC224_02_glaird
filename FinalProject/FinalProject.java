@@ -5,16 +5,17 @@
  */
 package finalproject;
 
-
-import java.sql.*;
 /**
  *
- * @author graha
+ * @author Finni
  */
 public class FinalProject {
 
-
+    /**
+     * @param args the command line arguments
+     */
     public static void main(String[] args) {
+        // TODO code application logic here
     }
     
 }
