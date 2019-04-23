@@ -5,26 +5,35 @@
  */
 package finalproject;
 
-
-import java.sql.*;
 /**
  *
- * @author graha
+ * @author Finni
  */
+import java.sql.*;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+
 public class Database {
 
+    public Database()
+    {
+        createTable();
+    }
+    
+    
     public static void createTable() {
         // SQLite connection string
-        String url = "jdbc:sqlite:C://Program Files/AssignmentManager.db";
+        String url = "jdbc:sqlite:C://sqlite/db/AssignmentManager.db";
         
         // SQL statement for creating a new table
         String sql = "CREATE TABLE IF NOT EXISTS AssignmentManager (\n"
-                + "	user text PRIMARY KEY,\n"
+                + "	user text NOT NULL,\n"
                 + "	name text NOT NULL,\n"
                 + "     class text NOT NULL,\n"
                 + "     duedate integer NOT NULL,\n"
                 + "     reminderdate integer,\n"
                 + "	description text,\n"
+                + "     CONSTRAINT key PRIMARY KEY(user, name, class)\n "
                 + ");";
         
         try (Connection conn = DriverManager.getConnection(url);
@@ -38,7 +47,7 @@ public class Database {
     
     private Connection connect() {
         // SQLite connection string
-        String url = "jdbc:sqlite:C://Program Files/AssignmentManager.db";
+        String url = "jdbc:sqlite:C://sqlite/db/AssignmentManager.db";
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
@@ -47,9 +56,9 @@ public class Database {
         }
         return conn;
     }
-    
+
     public void insert(String userName, String assignmentName, String courseName, int dueDate, int reminderDate, String description) {
-        String sql = "INSERT INTO AssignmentManager(user, name, class, duedate, reminderdate, description) VALUES(?,?,?,?,?,?)";
+        String sql = "INSERT INTO AssignmentManager (user, name, class, duedate, reminderdate, description) VALUES(?,?,?,?,?,?)";
  
         try (Connection conn = this.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -59,39 +68,41 @@ public class Database {
             pstmt.setInt(4, dueDate);
             pstmt.setInt(5, reminderDate);
             pstmt.setString(6, description);
-            pstmt.executeUpdate();
+            pstmt.execute();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
     
-    public void selectAll(HWAssignment assignment[]){
+    public ArrayList<HWAssignment> selectAll(){
         String sql = "SELECT user, name, class, duedate, reminderdate, description FROM AssignmentManager";
         int i = 0;
+        ArrayList<HWAssignment> list = new ArrayList<>();
+        HWAssignment assignment = new HWAssignment();
         
         try (Connection conn = this.connect();
-             Statement stmt  = conn.createStatement();
-             ResultSet rs    = stmt.executeQuery(sql)){
+            Statement stmt  = conn.createStatement();
+            ResultSet rs    = stmt.executeQuery(sql)){
             
             // loop through the result set
             while (rs.next()) {
-                assignment[i].setUser(rs.getString("user"));
-                assignment[i].setName(rs.getString("name"));
-                assignment[i].setClass(rs.getString("class"));
-                assignment[i].setDueDate(rs.getInt("duedate"));
-                assignment[i].setReminderDate(rs.getInt("reminderdate"));
-                assignment[i].setUser(rs.getString("description"));
+                assignment = new HWAssignment();
+                assignment.setUser(rs.getString("user"));
+                assignment.setName(rs.getString("name"));
+                assignment.setSubject(rs.getString("class"));
+                assignment.setDueDate(rs.getInt("duedate"));
+                assignment.setReminderDate(rs.getInt("reminderdate"));
+                assignment.setDescription(rs.getString("description"));
+                
+                
+                list.add(i, assignment);
                 
                 i++;
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return list;
     }
-    
-    
-    public static void main(String[] args) {
-    }
-    
 }
 
