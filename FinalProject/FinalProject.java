@@ -31,12 +31,14 @@ public class FinalProject{
     private JPanel rightPanel = new JPanel();
     private ArrayList<HWAssignment> list = new ArrayList<>();
     private ArrayList<JPanel> panels = new ArrayList<>();
-    private int numAssignments = 0;
+    private int numAssignments;
     
     
     
     public FinalProject()
     {
+        numAssignments = database.numItems();
+        JOptionPane.showMessageDialog(null, numAssignments);
         frame.setTitle("Homework Planner");
         frame.setSize(1920, 1080);
 
@@ -53,6 +55,7 @@ public class FinalProject{
         //build bottom panel to hold 3 status buttons and status bar
         buildBottomPanel();
         buildRightPanel();
+        centerPanel.setLayout(new GridLayout(15, 6));
         buildCenterPanel();
         // Add the info to the window
         //add(panel, BorderLayout.CENTER);
@@ -159,6 +162,7 @@ public class FinalProject{
                         frame.remove(centerPanel);
                         buildCenterPanel();
                         frame.add(centerPanel);
+                        frame.setVisible(true);
                     }
                         break;
             }

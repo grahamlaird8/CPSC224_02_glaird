@@ -74,6 +74,24 @@ public class Database {
         }
     }
     
+    public int numItems()
+    {
+        int num = 0;
+        String sql = "SELECT COUNT(*) FROM AssignmentManager";
+        try (Connection conn = this.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)){
+             while(rs.next())
+             {
+                 num = rs.getInt(1);
+             }
+            
+        } catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return num;
+    }
+    
     public ArrayList<HWAssignment> selectAll(){
         String sql = "SELECT user, name, class, duedate, reminderdate, description FROM AssignmentManager";
         int i = 0;
