@@ -109,33 +109,53 @@ public class FinalProject{
     
     private void buildCenterPanel()
     {
+        String data[][]={ {" ", " ", " ", " ", " ", " ", " "},
+                      {" ", " ", " ", " ", " ", " ", " "},
+                      {" ", " ", " ", " ", " ", " ", " "},
+                      {" ", " ", " ", " ", " ", " ", " "}
+    };    
+                            String column[]={"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};      
+    JTable table =new JTable(data,column);    
+    //jt.setBounds(30,40,200,300);    
+    table.setRowHeight(100);
+    JScrollPane sp = new JScrollPane(table);    
         list = database.selectAll();
         centerPanel.removeAll();
         
         
-        JLabel name;
-        JLabel dueDate;
-        JLabel user;
-        JLabel subject;
-        JLabel description;
-        JLabel reminderDate;
+        String name;
+        String dueDate;
+        String user;
+        String subject;
+        String description;
+        String reminderDate;
         
-        for(int i = 0; i < numAssignments; i++)
+        
+        for(int i = 1; i < numAssignments; i++)
         {
-            name = new JLabel("Name: " + list.get(i).getName());
-            dueDate = new JLabel("Due Date: " + Integer.toString(list.get(i).getDate()));
-            user = new JLabel("User: " + list.get(i).getUser());
-            subject = new JLabel("Subject: " + list.get(i).getSubject());
-            description = new JLabel("Description: " + list.get(i).getDescription());
-            reminderDate = new JLabel("Reminder Date: " + Integer.toString(list.get(i).getReminderDate()));
+            name = "Name: " + list.get(i).getName();
+            dueDate = "Due Date: " + Integer.toString(list.get(i).getDate());
+            user = "User: " + list.get(i).getUser();
+            subject = "Subject: " + list.get(i).getSubject();
+            description = "Description: " + list.get(i).getDescription();
+            reminderDate = "Reminder Date: " + Integer.toString(list.get(i).getReminderDate());
             
-            centerPanel.add(name);
-            centerPanel.add(dueDate);
-            centerPanel.add(user);
-            centerPanel.add(subject);
-            centerPanel.add(description);
-            centerPanel.add(reminderDate);
+            String info = name + dueDate + subject + description + reminderDate;
+            if(list.get(i).getDate() <= 7)
+            {
+                data[0][i] = info;
+            } else if(list.get(i).getDate() <= 14)
+            {
+                data[1][i] = info; 
+            } else if(list.get(i).getDate() <= 21)
+            {
+                data[2][i] = info;
+            } else if(list.get(i).getDate() <=28)
+            {
+                data[3][i] = info;
+            }
         }
+            centerPanel.add(sp);
     }
     
     
