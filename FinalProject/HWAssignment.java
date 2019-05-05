@@ -11,15 +11,15 @@ package finalproject;
  */
 public class HWAssignment {
      // setters getters whatever else
-    private int dueDate;
-    private int reminderDate;
+    private String dueDate;
+    private String reminderDate;
     private String subject;
     private String user;
     private String name;
     private String description;
 
     //constructor
-    public HWAssignment (int dueDate, int reminderDate, String subject, String user, String name, String description) {
+    public HWAssignment (String dueDate, String reminderDate, String subject, String user, String name, String description) {
         this.dueDate = dueDate;
         this.reminderDate = reminderDate;
         this.subject = subject;
@@ -28,13 +28,18 @@ public class HWAssignment {
         this.description = description;
     }
     
+    public HWAssignment()
+    {
+    }
+    
     // setters
-    public void setDueDate(int dueDate) // assigns name
+    public void setDueDate(String dueDate) // assigns name
     {
         this.dueDate = dueDate;
     }
     
-    public void setReminderDate(int reminderDate) // assigns date
+   
+    public void setReminderDate(String reminderDate) // assigns date
     {
         this.reminderDate = reminderDate;
     }
@@ -65,11 +70,11 @@ public class HWAssignment {
     
     // getters
     
-    public int getDate() {
+    public String getDate() {
         return this.dueDate;
     }
     
-    public int getReminderDate() {
+    public String getReminderDate() {
         return this.reminderDate;
     }
     

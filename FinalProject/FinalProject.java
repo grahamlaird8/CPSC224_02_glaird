@@ -27,16 +27,26 @@ public class FinalProject{
     private JTextField assignmentReminderDateInput;
     private JButton addAssignment;
     private JPanel centerPanel = new JPanel();
+    private JLabel title = new JLabel("Assignment Tracker");
+    private JPanel titleP = new JPanel();
     private JPanel bottomPanel;
     private JPanel rightPanel = new JPanel();
     private ArrayList<HWAssignment> list = new ArrayList<>();
     private ArrayList<JPanel> panels = new ArrayList<>();
-    private int numAssignments = 0;
-    
+    private int numAssignments = database.numItems();
+    private ArrayList<JButton> assignments = new ArrayList<>(numAssignments);
+    Color customDarkGrey = new Color(43,53,68);
+    Color customDark = new Color(37,42,51);
+    Color customLightGrey = new Color(109,121,140);
+    private String[] months = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+    private String[] days = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
+    private String[] years = new String[]{"2019", "2020", "2021", "2022", "2023", "2024", "2025"};
     
     
     public FinalProject()
     {
+        
+        JOptionPane.showMessageDialog(null, numAssignments);
         frame.setTitle("Homework Planner");
         frame.setSize(1920, 1080);
 
@@ -51,13 +61,20 @@ public class FinalProject{
         //buildPlayerPanel();
 
         //build bottom panel to hold 3 status buttons and status bar
+        titleP.setBackground(customLightGrey);
+        title.setForeground(Color.white);
+        titleP.setBorder(BorderFactory.createEtchedBorder());
+        title.setFont(new Font("Helvetica",Font.BOLD,40));
+        titleP.add(title);
+        frame.add(titleP,BorderLayout.NORTH);
         buildBottomPanel();
         buildRightPanel();
+        centerPanel.setBackground(Color.black);
         buildCenterPanel();
         // Add the info to the window
         //add(panel, BorderLayout.CENTER);
         //add(playerPanel, BorderLayout.NORTH); // adds the two player panels
-        frame.add(centerPanel, BorderLayout.WEST);
+        frame.add(centerPanel, BorderLayout.CENTER);
         frame.add(rightPanel, BorderLayout.EAST);
         frame.add(bottomPanel, BorderLayout.SOUTH);
         
@@ -89,6 +106,13 @@ public class FinalProject{
         assignmentSubjectInput = new JTextField();
         assignmentDescriptionInput = new JTextField();
         assignmentReminderDateInput = new JTextField();
+        JPanel datePanel = new JPanel();
+        JComboBox monthMenu = new JComboBox(months);
+        JComboBox daysMenu = new JComboBox(days);
+        JComboBox yearMenu = new JComboBox(years);
+        datePanel.add(monthMenu);
+        datePanel.add(daysMenu);
+        datePanel.add(yearMenu);
        
         rightPanel.setBorder(BorderFactory.createTitledBorder("Add New Assignment"));
         rightPanel.setLayout(new GridLayout(6, 2));
@@ -97,7 +121,7 @@ public class FinalProject{
         rightPanel.add(label2);
         rightPanel.add(assignmentUserInput);
         rightPanel.add(label3);
-        rightPanel.add(assignmentDueDateInput);
+        rightPanel.add(datePanel);
         rightPanel.add(label4);
         rightPanel.add(assignmentSubjectInput);
         rightPanel.add(label5);
@@ -109,53 +133,62 @@ public class FinalProject{
     
     private void buildCenterPanel()
     {
-        String data[][]={ {" ", " ", " ", " ", " ", " ", " "},
-                      {" ", " ", " ", " ", " ", " ", " "},
-                      {" ", " ", " ", " ", " ", " ", " "},
-                      {" ", " ", " ", " ", " ", " ", " "}
-    };    
-                            String column[]={"SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};      
-    JTable table =new JTable(data,column);    
-    //jt.setBounds(30,40,200,300);    
-    table.setRowHeight(100);
-    JScrollPane sp = new JScrollPane(table);    
         list = database.selectAll();
         centerPanel.removeAll();
+        centerPanel.setBackground(customDarkGrey);
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(1, 6));
+        //centerPanel.setLayout(new GridLayout(numAssignments, 1));
+        String sName;
+        String sUser;
+        String sTotal;
+        String sDueDate;
+        String[] all = new String[numAssignments];
         
         
-        String name;
-        String dueDate;
-        String user;
-        String subject;
-        String description;
-        String reminderDate;
+        
+        JLabel name;
+        JLabel dueDate;
+        JLabel user;
+        JLabel subject;
+        JLabel description;
+        JLabel reminderDate;
         
         
-        for(int i = 1; i < numAssignments; i++)
+        for(int i = 0; i < numAssignments; i++)
         {
-            name = "Name: " + list.get(i).getName();
-            dueDate = "Due Date: " + Integer.toString(list.get(i).getDate());
-            user = "User: " + list.get(i).getUser();
-            subject = "Subject: " + list.get(i).getSubject();
-            description = "Description: " + list.get(i).getDescription();
-            reminderDate = "Reminder Date: " + Integer.toString(list.get(i).getReminderDate());
+            panel = new JPanel();
+            panel.setBackground(customLightGrey);
+            sName = "                    Assignment: " + list.get(i).getName();
+            sDueDate = "Due Date: " + list.get(i).getDate();
+            sUser = "      User: " + list.get(i).getUser();
+            sTotal = sDueDate + sName + sUser;
+            all[i] = sTotal;
             
-            String info = name + dueDate + subject + description + reminderDate;
-            if(list.get(i).getDate() <= 7)
-            {
-                data[0][i] = info;
-            } else if(list.get(i).getDate() <= 14)
-            {
-                data[1][i] = info; 
-            } else if(list.get(i).getDate() <= 21)
-            {
-                data[2][i] = info;
-            } else if(list.get(i).getDate() <=28)
-            {
-                data[3][i] = info;
-            }
+            //subject = new JLabel("Subject: " + list.get(i).getSubject());
+            //description = new JLabel("Description: " + list.get(i).getDescription());
+            //reminderDate = new JLabel("Reminder Date: " + Integer.toString(list.get(i).getReminderDate()));
+            //name.setForeground(Color.white);
+            
+            
+            //panel.add(name);
+            //panel.add(dueDate);
+            //panel.add(user);
+            //panel.add(subject);
+            //panel.add(description);
+            //panel.add(reminderDate);
+            //panel.setBorder(BorderFactory.createEtchedBorder(customDark, Color.white));
+            //centerPanel.add(panel);
         }
-            centerPanel.add(sp);
+        
+        JList list = new JList(all);
+        list.setBackground(customDarkGrey);
+        list.setForeground(Color.white);
+        list.setPreferredSize(new Dimension(600, 800));
+        list.setFont(new Font("Helvetica",Font.BOLD,20));
+        JScrollPane sp = new JScrollPane(list);
+        sp.setPreferredSize(new Dimension(800, 800));
+        centerPanel.add(sp);
     }
     
     
@@ -174,11 +207,11 @@ public class FinalProject{
                     }
                     else
                     {
-                        database.insert(assignmentUserInput.getText(), assignmentNameInput.getText(), assignmentSubjectInput.getText(), Integer.parseInt(assignmentDueDateInput.getText()), Integer.parseInt(assignmentReminderDateInput.getText()), assignmentDescriptionInput.getText());
+                        database.insert(assignmentUserInput.getText(), assignmentNameInput.getText(), assignmentSubjectInput.getText(), assignmentDueDateInput.getText(), (assignmentReminderDateInput.getText()), assignmentDescriptionInput.getText());
                         numAssignments++;
                         frame.remove(centerPanel);
                         buildCenterPanel();
-                        frame.add(centerPanel);
+                        frame.add(centerPanel, BorderLayout.CENTER);
                         frame.setVisible(true);
                     }
                         break;
