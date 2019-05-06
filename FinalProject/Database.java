@@ -57,7 +57,7 @@ public class Database {
         return conn;
     }
 
-    public void insert(String userName, String assignmentName, String courseName, int dueDate, int reminderDate, String description) {
+    public void insert(String userName, String assignmentName, String courseName, String dueDate, String reminderDate, String description) {
         String sql = "INSERT INTO AssignmentManager (user, name, class, duedate, reminderdate, description) VALUES(?,?,?,?,?,?)";
  
         try (Connection conn = this.connect();
@@ -65,8 +65,8 @@ public class Database {
             pstmt.setString(1, userName);
             pstmt.setString(2, assignmentName);
             pstmt.setString(3, courseName);
-            pstmt.setInt(4, dueDate);
-            pstmt.setInt(5, reminderDate);
+            pstmt.setString(4, dueDate);
+            pstmt.setString(5, reminderDate);
             pstmt.setString(6, description);
             pstmt.execute();
         } catch (SQLException e) {
@@ -108,8 +108,8 @@ public class Database {
                 assignment.setUser(rs.getString("user"));
                 assignment.setName(rs.getString("name"));
                 assignment.setSubject(rs.getString("class"));
-                assignment.setDueDate(rs.getInt("duedate"));
-                assignment.setReminderDate(rs.getInt("reminderdate"));
+                assignment.setDueDate(rs.getString("duedate"));
+                assignment.setReminderDate(rs.getString("reminderdate"));
                 assignment.setDescription(rs.getString("description"));
                 
                 
@@ -122,5 +122,20 @@ public class Database {
         }
         return list;
     }
+    
+    public void delete(String assignmentName){
+        //String sql = "DELETE FROM AssignmentManager WHERE name = ?";
+        String sql = "DELETE FROM AssignmentManager WHERE '" + assignmentName + "'";
+        try (Connection conn = this.connect();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+ 
+            // set the corresponding param
+            pstmt.setString(1, assignmentName);
+            // execute the delete statement
+            pstmt.executeUpdate();
+ 
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
-
