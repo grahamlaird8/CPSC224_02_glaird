@@ -65,7 +65,7 @@ public class AuthenticationDatabase {
     }
     
     public void getData(String username, String password) {
-        String sql = "SELECT * FROM UserAuthentication WHERE user = " + username;
+        String sql = "SELECT * FROM UserAuthentication WHERE user = ?";
         
         passwordChecker check = new passwordChecker();
  
