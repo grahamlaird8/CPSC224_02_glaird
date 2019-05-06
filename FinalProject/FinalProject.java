@@ -34,7 +34,9 @@ public class FinalProject{
     private JPanel bottomPanel;
     private JPanel rightPanel = new JPanel();
     private ArrayList<HWAssignment> list = new ArrayList<>();
-    private int numAssignments = database.numItems();
+    private ArrayList<HWAssignment> listForUser = new ArrayList<>();
+    private int totAssignments = database.numItems();
+    private int numAssignments;
     Color customDarkGrey = new Color(43,53,68);
     Color customDark = new Color(37,42,51);
     Color customLightGrey = new Color(109,121,140);
@@ -47,8 +49,10 @@ public class FinalProject{
     private String reminderDueMonth;
     private String reminderDueDay;
     private String reminderDueYear;
+    public String username;
     private JList assignmentList;
     private Popup p;
+    private LoginForm login;
     private int index;
     JComboBox monthMenu = new JComboBox(months);
     JComboBox daysMenu = new JComboBox(days);
@@ -58,8 +62,9 @@ public class FinalProject{
     JComboBox reminderYearMenu = new JComboBox(years);
     
     
-    public FinalProject()
+    public FinalProject(String user)
     {
+        username = user;
         frame.setTitle("Homework Planner");
         frame.setSize(1920, 1080);
 
@@ -95,6 +100,8 @@ public class FinalProject{
         frame.setVisible(true);   
     }
     
+    
+    
     private void buildBottomPanel()
     {
         bottomPanel = new JPanel();
@@ -111,13 +118,13 @@ public class FinalProject{
     {
         
         JLabel label1 = new JLabel("Assignment Name: ");
-        JLabel label2 = new JLabel("User: ");
+        //JLabel label2 = new JLabel("User: ");
         JLabel label3 = new JLabel("Due Date (MMDDYYYY): ");
         JLabel label4 = new JLabel("Course: ");
         JLabel label5 = new JLabel("Description (Optional): ");
         JLabel label6 = new JLabel("Reminder Date (Optional, MMDDYYYY): ");
         assignmentNameInput = new JTextField();
-        assignmentUserInput = new JTextField();
+        //assignmentUserInput = new JTextField();
         assignmentDueDateInput = new JTextField();
         assignmentSubjectInput = new JTextField();
         assignmentDescriptionInput = new JTextField();
@@ -144,8 +151,8 @@ public class FinalProject{
         rightPanel.setLayout(new GridLayout(6, 2));
         rightPanel.add(label1);
         rightPanel.add(assignmentNameInput);
-        rightPanel.add(label2);
-        rightPanel.add(assignmentUserInput);
+        //rightPanel.add(label2);
+        //rightPanel.add(assignmentUserInput);
         rightPanel.add(label3);
         rightPanel.add(datePanel);
         rightPanel.add(label4);
@@ -169,20 +176,28 @@ public class FinalProject{
         String sCourse;
         String sTotal;
         String sDueDate;
-        String[] all = new String[numAssignments];
+        String[] all;
+        numAssignments = 0;
+        
+        for(int i = 0; i < totAssignments; i++)
+        {
+            if(list.get(i).getUser().equals(username))
+            {
+                listForUser.add(numAssignments, list.get(i));
+                numAssignments++;
+            }
+            
+        }
         
         
-        
-        
-        
-        
+        all = new String[numAssignments];
         for(int i = 0; i < numAssignments; i++)
         {
             panel = new JPanel();
             panel.setBackground(customLightGrey);
-            sName = "                    Assignment: " + list.get(i).getName();
-            sDueDate = "Due Date: " + list.get(i).getDate();
-            sCourse = "      Course: " + list.get(i).getSubject();
+            sName = "                    Assignment: " + listForUser.get(i).getName();
+            sDueDate = "Due Date: " + listForUser.get(i).getDate();
+            sCourse = "      Course: " + listForUser.get(i).getSubject();
             sTotal = sDueDate + sName + sCourse;
             all[i] = sTotal;
         }
@@ -209,12 +224,12 @@ public class FinalProject{
 
                 JFrame f = new JFrame("Selected Assignment");
                 JPanel panel = new JPanel();
-                panel.setLayout(new GridLayout(5,1));
-                JLabel name = new JLabel("Assignment: " + list.get(index).getName());
-                JLabel dueDate = new JLabel("Due Date: " + list.get(index).getDate());
-                JLabel subject = new JLabel("Course: " + list.get(index).getSubject());
-                JLabel description = new JLabel("Description: " + list.get(index).getDescription());
-                JLabel reminderDate = new JLabel("Reminder Date: " + list.get(index).getReminderDate());
+                panel.setLayout(new GridLayout(6,1));
+                JLabel name = new JLabel("Assignment: " + listForUser.get(index).getName());
+                JLabel dueDate = new JLabel("Due Date: " + listForUser.get(index).getDate());
+                JLabel subject = new JLabel("Course: " + listForUser.get(index).getSubject());
+                JLabel description = new JLabel("Description: " + listForUser.get(index).getDescription());
+                JLabel reminderDate = new JLabel("Reminder Date: " + listForUser.get(index).getReminderDate());
                 name.setFont(new Font("Helvetica", Font.BOLD,20));
                 name.setForeground(Color.white);
                 dueDate.setFont(new Font("Helvetica", Font.BOLD,20));
@@ -265,14 +280,14 @@ public class FinalProject{
             String actionCommand = e.getActionCommand();
             switch (actionCommand){
                 case "Add New Assignment":
-                    if(assignmentNameInput.getText().equals("") || assignmentUserInput.getText().equals("") || assignmentSubjectInput.getText().equals(""))
+                    if(assignmentNameInput.getText().equals("") || username.equals("") || assignmentSubjectInput.getText().equals(""))
                     {
                         JOptionPane.showMessageDialog(null, "Non-optional fields must be filled out!", "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                     else
                     {
-                        database.insert(assignmentUserInput.getText(), assignmentNameInput.getText(), assignmentSubjectInput.getText(), dueMonth + "/" + dueDay + "/" + dueYear, reminderDueMonth + "/" + reminderDueDay + "/" + reminderDueYear, assignmentDescriptionInput.getText());
-                        numAssignments = database.numItems();
+                        database.insert(username, assignmentNameInput.getText(), assignmentSubjectInput.getText(), dueMonth + "/" + dueDay + "/" + dueYear, reminderDueMonth + "/" + reminderDueDay + "/" + reminderDueYear, assignmentDescriptionInput.getText());
+                        totAssignments = database.numItems();
                         frame.remove(centerPanel);
                         buildCenterPanel();
                         frame.add(centerPanel, BorderLayout.CENTER);
@@ -286,8 +301,8 @@ public class FinalProject{
                     }
                     else
                     {
-                        database.delete(assignmentNameInput.getText());
-                        numAssignments = database.numItems(); 
+                        database.delete(assignmentNameInput.getText(), username);
+                        totAssignments = database.numItems(); 
                         frame.remove(centerPanel);
                         buildCenterPanel();
                         frame.add(centerPanel, BorderLayout.CENTER);
@@ -311,7 +326,7 @@ public class FinalProject{
     }
     
     public static void main(String[] args) {
-        new FinalProject();
+        new LoginForm();
     }
     
 }

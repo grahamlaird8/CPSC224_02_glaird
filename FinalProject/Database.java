@@ -123,13 +123,14 @@ public class Database {
         return list;
     }
     
-    public void delete(String assignmentName){
-        String sql = "DELETE FROM AssignmentManager WHERE name = ?";
+    public void delete(String assignmentName, String username){
+        String sql = "DELETE FROM AssignmentManager WHERE name = ? AND user = ?";
         try (Connection conn = this.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
  
             // set the corresponding param
             pstmt.setString(1, assignmentName);
+            pstmt.setString(2, username);
             // execute the delete statement
             pstmt.executeUpdate();
  
