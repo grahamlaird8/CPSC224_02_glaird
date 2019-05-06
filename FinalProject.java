@@ -8,7 +8,7 @@ package finalproject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  *
@@ -26,6 +26,7 @@ public class FinalProject{
     private JTextField assignmentDescriptionInput;
     private JTextField assignmentReminderDateInput;
     private JButton addAssignment;
+    private JButton removeAssignment;
     private JPanel centerPanel = new JPanel();
     private JLabel title = new JLabel("Assignment Tracker");
     private JPanel titleP = new JPanel();
@@ -44,9 +45,15 @@ public class FinalProject{
     private String dueMonth;
     private String dueDay;
     private String dueYear;
+    private String reminderDueMonth;
+    private String reminderDueDay;
+    private String reminderDueYear;
     JComboBox monthMenu = new JComboBox(months);
     JComboBox daysMenu = new JComboBox(days);
     JComboBox yearMenu = new JComboBox(years);
+    JComboBox reminderMonthMenu = new JComboBox(months);
+    JComboBox reminderDaysMenu = new JComboBox(days);
+    JComboBox reminderYearMenu = new JComboBox(years);
     
     
     public FinalProject()
@@ -91,10 +98,13 @@ public class FinalProject{
     private void buildBottomPanel()
     {
         bottomPanel = new JPanel();
-        bottomPanel.setLayout(new BorderLayout());
+        bottomPanel.setLayout(new GridLayout(2, 1));
         addAssignment = new JButton("Add New Assignment");
+        removeAssignment = new JButton("Delete Assignent");
         addAssignment.addActionListener(new ButtonListener());
+        removeAssignment.addActionListener(new ButtonListener());
         bottomPanel.add(addAssignment);
+        bottomPanel.add(removeAssignment);
     }
     
     private void buildRightPanel()
@@ -113,6 +123,7 @@ public class FinalProject{
         assignmentDescriptionInput = new JTextField();
         assignmentReminderDateInput = new JTextField();
         JPanel datePanel = new JPanel();
+        JPanel reminderDatePanel = new JPanel();
         
         datePanel.add(monthMenu);
         datePanel.add(daysMenu);
@@ -120,6 +131,14 @@ public class FinalProject{
         monthMenu.addActionListener(new comboListenr());
         daysMenu.addActionListener(new comboListenr());
         yearMenu.addActionListener(new comboListenr());
+        
+        
+        reminderDatePanel.add(reminderMonthMenu);
+        reminderDatePanel.add(reminderDaysMenu);
+        reminderDatePanel.add(reminderYearMenu);
+        reminderMonthMenu.addActionListener(new comboListenr());
+        reminderDaysMenu.addActionListener(new comboListenr());
+        reminderYearMenu.addActionListener(new comboListenr());
        
         rightPanel.setBorder(BorderFactory.createTitledBorder("Add New Assignment"));
         rightPanel.setLayout(new GridLayout(6, 2));
@@ -134,13 +153,14 @@ public class FinalProject{
         rightPanel.add(label5);
         rightPanel.add(assignmentDescriptionInput);
         rightPanel.add(label6);
-        rightPanel.add(assignmentReminderDateInput);
+        rightPanel.add(reminderDatePanel);
        
     }
     
     private void buildCenterPanel()
     {
         list = database.selectAll();
+        Collections.sort(list, new CustomComparator());         //sort the list by due date, newest first
         centerPanel.removeAll();
         centerPanel.setBackground(customDarkGrey);
         JPanel panel = new JPanel();
@@ -205,6 +225,10 @@ public class FinalProject{
             dueMonth = monthMenu.getSelectedItem().toString();
             dueDay = daysMenu.getSelectedItem().toString();
             dueYear = yearMenu.getSelectedItem().toString();
+            
+            reminderDueMonth = reminderMonthMenu.getSelectedItem().toString();
+            reminderDueDay = reminderDaysMenu.getSelectedItem().toString();
+            reminderDueYear = reminderYearMenu.getSelectedItem().toString();
         }
     }
     
@@ -223,7 +247,7 @@ public class FinalProject{
                     }
                     else
                     {
-                        database.insert(assignmentUserInput.getText(), assignmentNameInput.getText(), assignmentSubjectInput.getText(), dueMonth + "/" + dueDay + "/" + dueYear, (assignmentReminderDateInput.getText()), assignmentDescriptionInput.getText());
+                        database.insert(assignmentUserInput.getText(), assignmentNameInput.getText(), assignmentSubjectInput.getText(), dueMonth + "/" + dueDay + "/" + dueYear, reminderDueMonth + "/" + reminderDueDay + "/" + reminderDueYear, assignmentDescriptionInput.getText());
                         numAssignments++;
                         frame.remove(centerPanel);
                         buildCenterPanel();
@@ -231,9 +255,36 @@ public class FinalProject{
                         frame.setVisible(true);
                     }
                         break;
+                case "Delete Assignent":
+                    if(assignmentNameInput.getText().equals(""))
+                    {
+                        JOptionPane.showMessageDialog(null, "Non-optional fields must be filled out!", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else
+                    {
+                        database.delete(assignmentUserInput.getText());
+                        numAssignments--;
+                        frame.remove(centerPanel);
+                        buildCenterPanel();
+                        frame.add(centerPanel, BorderLayout.CENTER);
+                        frame.setVisible(true);
+                        System.out.println("pressed");
+                    }
+                    break;
             }
         }
         
+    }
+    
+    public class CustomComparator implements Comparator<HWAssignment> {
+    @Override
+    public int compare(HWAssignment o1, HWAssignment o2) {
+        String date1 = o1.getDate();
+        String date2 = o2.getDate();
+        date1 = date1.substring(4, 7) + date1.substring(0,3);
+        date2 = date2.substring(4, 7) + date2.substring(0,3);
+        return date1.compareTo(date2);
+        }
     }
     
     public static void main(String[] args) {
