@@ -8,7 +8,7 @@ package finalproject;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 
 /**
  *
@@ -100,7 +100,7 @@ public class FinalProject{
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2, 1));
         addAssignment = new JButton("Add New Assignment");
-        removeAssignment = new JButton("Delete Assignment");
+        removeAssignment = new JButton("Delete Assignent");
         addAssignment.addActionListener(new ButtonListener());
         removeAssignment.addActionListener(new ButtonListener());
         bottomPanel.add(addAssignment);
@@ -160,11 +160,11 @@ public class FinalProject{
     private void buildCenterPanel()
     {
         list = database.selectAll();
+        Collections.sort(list, new CustomComparator());         //sort the list by due date, newest first
         centerPanel.removeAll();
         centerPanel.setBackground(customDarkGrey);
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(1, 6));
-        //centerPanel.setLayout(new GridLayout(numAssignments, 1));
         String sName;
         String sUser;
         String sTotal;
@@ -190,21 +190,6 @@ public class FinalProject{
             sUser = "      User: " + list.get(i).getUser();
             sTotal = sDueDate + sName + sUser;
             all[i] = sTotal;
-            
-            //subject = new JLabel("Subject: " + list.get(i).getSubject());
-            //description = new JLabel("Description: " + list.get(i).getDescription());
-            //reminderDate = new JLabel("Reminder Date: " + Integer.toString(list.get(i).getReminderDate()));
-            //name.setForeground(Color.white);
-            
-            
-            //panel.add(name);
-            //panel.add(dueDate);
-            //panel.add(user);
-            //panel.add(subject);
-            //panel.add(description);
-            //panel.add(reminderDate);
-            //panel.setBorder(BorderFactory.createEtchedBorder(customDark, Color.white));
-            //centerPanel.add(panel);
         }
         
         JList list = new JList(all);
@@ -247,7 +232,7 @@ public class FinalProject{
                     else
                     {
                         database.insert(assignmentUserInput.getText(), assignmentNameInput.getText(), assignmentSubjectInput.getText(), dueMonth + "/" + dueDay + "/" + dueYear, reminderDueMonth + "/" + reminderDueDay + "/" + reminderDueYear, assignmentDescriptionInput.getText());
-                        numAssignments++;
+                        numAssignments = database.numItems();
                         frame.remove(centerPanel);
                         buildCenterPanel();
                         frame.add(centerPanel, BorderLayout.CENTER);
@@ -261,8 +246,8 @@ public class FinalProject{
                     }
                     else
                     {
-                        database.delete(assignmentUserInput.getText());
-                        numAssignments++;
+                        database.delete(assignmentNameInput.getText());
+                        numAssignments = database.numItems();
                         frame.remove(centerPanel);
                         buildCenterPanel();
                         frame.add(centerPanel, BorderLayout.CENTER);
@@ -274,8 +259,20 @@ public class FinalProject{
         
     }
     
+    public class CustomComparator implements Comparator<HWAssignment> {
+    @Override
+    public int compare(HWAssignment o1, HWAssignment o2) {
+        String date1 = o1.getDate();
+        String date2 = o2.getDate();
+        date1 = date1.substring(4, 7) + date1.substring(0,3);
+        date2 = date2.substring(4, 7) + date2.substring(0,3);
+        return date1.compareTo(date2);
+        }
+    }
+    
     public static void main(String[] args) {
-        new FinalProject();
+        new LoginForm();
+        //new FinalProject();
     }
     
 }
