@@ -50,6 +50,8 @@ public class FinalProject{
     private String reminderDueDay;
     private String reminderDueYear;
     private JList assignmentList;
+    private Popup p;
+    private int index;
     JComboBox monthMenu = new JComboBox(months);
     JComboBox daysMenu = new JComboBox(days);
     JComboBox yearMenu = new JComboBox(years);
@@ -165,7 +167,6 @@ public class FinalProject{
         centerPanel.setBackground(customDarkGrey);
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(1, 6));
-        //centerPanel.setLayout(new GridLayout(numAssignments, 1));
         String sName;
         String sCourse;
         String sTotal;
@@ -174,12 +175,7 @@ public class FinalProject{
         
         
         
-        JLabel name;
-        JLabel dueDate;
-        JLabel user;
-        JLabel subject;
-        JLabel description;
-        JLabel reminderDate;
+        
         
         
         for(int i = 0; i < numAssignments; i++)
@@ -191,21 +187,6 @@ public class FinalProject{
             sCourse = "      Course: " + list.get(i).getSubject();
             sTotal = sDueDate + sName + sCourse;
             all[i] = sTotal;
-            
-            //subject = new JLabel("Subject: " + list.get(i).getSubject());
-            //description = new JLabel("Description: " + list.get(i).getDescription());
-            //reminderDate = new JLabel("Reminder Date: " + Integer.toString(list.get(i).getReminderDate()));
-            //name.setForeground(Color.white);
-            
-            
-            //panel.add(name);
-            //panel.add(dueDate);
-            //panel.add(user);
-            //panel.add(subject);
-            //panel.add(description);
-            //panel.add(reminderDate);
-            //panel.setBorder(BorderFactory.createEtchedBorder(customDark, Color.white));
-            //centerPanel.add(panel);
         }
         
         assignmentList = new JList(all);
@@ -223,8 +204,42 @@ public class FinalProject{
 
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            int index = assignmentList.getSelectedIndex();
-            JOptionPane.showMessageDialog(null, index);
+            if(index != assignmentList.getSelectedIndex())
+            {
+                index = assignmentList.getSelectedIndex();
+                //JOptionPane.showMessageDialog(null, index);
+
+                JFrame f = new JFrame("Selected Assignment");
+                JPanel panel = new JPanel();
+                panel.setLayout(new GridLayout(5,1));
+                JLabel name = new JLabel("Assignment: " + list.get(index).getName());
+                JLabel dueDate = new JLabel("Due Date: " + list.get(index).getDate());
+                JLabel subject = new JLabel("Course: " + list.get(index).getSubject());
+                JLabel description = new JLabel("Description: " + list.get(index).getDescription());
+                JLabel reminderDate = new JLabel("Reminder Date: " + list.get(index).getReminderDate());
+                name.setFont(new Font("Helvetica", Font.BOLD,20));
+                name.setForeground(Color.white);
+                dueDate.setFont(new Font("Helvetica", Font.BOLD,20));
+                dueDate.setForeground(Color.white);
+                subject.setFont(new Font("Helvetica", Font.BOLD,20));
+                subject.setForeground(Color.white);
+                description.setFont(new Font("Helvetica", Font.BOLD,20));
+                description.setForeground(Color.white);
+                reminderDate.setFont(new Font("Helvetica", Font.BOLD,20));
+                reminderDate.setForeground(Color.white);
+                panel.add(name);
+                panel.add(dueDate);
+                panel.add(subject);
+                panel.add(description);
+                panel.add(reminderDate);
+                f.setSize(400,400);
+                PopupFactory pf = new PopupFactory();
+                panel.setBackground(customDarkGrey);
+                panel.setForeground(Color.white);
+                p = pf.getPopup(f, panel, 600, 600);
+                f.add(panel);
+                f.show();
+            }
         }
         
     }
