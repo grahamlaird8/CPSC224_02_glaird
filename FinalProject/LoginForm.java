@@ -6,14 +6,14 @@
 package finalproject;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
  
 public class LoginForm extends JFrame{
     
@@ -23,8 +23,8 @@ public class LoginForm extends JFrame{
  private JButton btn1;
  private JButton btn2;
  private JPasswordField passInput;
+ private JFrame frame = new JFrame("Login Form");
  LoginForm() {
-  JFrame frame = new JFrame("Login Form");
   title = new JLabel("Login Form");
   title.setFont(new Font("Helvetica", Font.BOLD, 20));
  
@@ -72,11 +72,12 @@ public class LoginForm extends JFrame{
      {
         if(correctPassword.equals(password))
         {
-            System.out.println("cool");
+            new FinalProject();
+            frame.setVisible(false);
         }
         else
         {
-            System.out.println("woops");  
+            JOptionPane.showMessageDialog(null, "Password Incorrect!", "ERROR", JOptionPane.ERROR_MESSAGE); 
         }
      } else if(e.getSource() == btn2)
      {
