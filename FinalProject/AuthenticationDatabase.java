@@ -72,7 +72,7 @@ public class AuthenticationDatabase {
         try (Connection conn = this.connect();
             Statement stmt  = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
-            check.setGuess(rs.getString("password"));
+            check.setPass(rs.getString("password"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
