@@ -64,18 +64,17 @@ public class AuthenticationDatabase {
         }
     }
     
-    public String getData(String username, String password) {
+    public void getData(String username, String password) {
         String sql = "SELECT * FROM UserAuthentication WHERE user = " + username;
-        String value = null;
+        
+        passwordChecker check = new passwordChecker();
  
         try (Connection conn = this.connect();
             Statement stmt  = conn.createStatement();
             ResultSet rs = stmt.executeQuery(sql)){
-            return value = rs.getString("password");
+            check.setGuess(rs.getString("password"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println(value);
-        return value;
     }
 }

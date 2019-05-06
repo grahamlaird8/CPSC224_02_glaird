@@ -64,11 +64,12 @@ public class LoginForm extends JFrame{
  {
  public void actionPerformed(ActionEvent e)
  {
+     passwordChecker check = new passwordChecker();
      if(e.getSource() == btn1)
      {
         String username = usernameInput.getText();
         String password = passInput.getText();
-        if(database.getData(username, password) == password)
+        if(check.getPass() == password)
         {
             System.out.println("cool");
         }
