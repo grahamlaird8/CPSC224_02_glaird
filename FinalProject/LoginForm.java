@@ -24,9 +24,13 @@ public class LoginForm extends JFrame{
  private JButton btn2;
  private JPasswordField passInput;
  private JFrame frame = new JFrame("Login Form");
+ public String username;
+
  LoginForm() {
   title = new JLabel("Login Form");
   title.setFont(new Font("Helvetica", Font.BOLD, 20));
+  //Color darkBlue = new Color(129, 207, 224);
+  Color spray = new Color(129, 207, 224);
  
   name = new JLabel("Username");
   pass = new JLabel("Password");
@@ -48,6 +52,13 @@ public class LoginForm extends JFrame{
   
   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   
+  frame.getContentPane().setBackground(Color.darkGray);
+  btn1.setBackground(spray);
+  btn2.setBackground(spray);
+  title.setForeground(Color.WHITE);
+  name.setForeground(Color.WHITE);
+  pass.setForeground(Color.WHITE);
+  
   frame.add(title);
   frame.add(name);
   frame.add(usernameInput);
@@ -60,11 +71,18 @@ public class LoginForm extends JFrame{
   frame.setLayout(null);
   frame.setVisible(true);
  }
+ 
+ public String getUser()
+    {
+        return username;
+    }
+
+ 
  private class ButtonListener implements ActionListener
  {
  public void actionPerformed(ActionEvent e)
  {
-     String username = usernameInput.getText();
+     username = usernameInput.getText();
      String password = passInput.getText();
      String correctPassword = database.getData(usernameInput.getText());
      //passwordChecker check = new passwordChecker();
@@ -72,7 +90,8 @@ public class LoginForm extends JFrame{
      {
         if(correctPassword.equals(password))
         {
-            new FinalProject();
+            new FinalProject(username);
+            //JOptionPane.showMessageDialog(null, proj.username);
             frame.setVisible(false);
         }
         else
@@ -88,6 +107,6 @@ public class LoginForm extends JFrame{
  }
 
  public static void main(String[] args) {
-  new LoginForm();
+  //new LoginForm();
  }
 }

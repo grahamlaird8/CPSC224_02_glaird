@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import javax.swing.event.*;
 
 /**
  *
@@ -28,26 +29,32 @@ public class FinalProject{
     private JButton addAssignment;
     private JButton removeAssignment;
     private JPanel centerPanel = new JPanel();
-    private JLabel title = new JLabel("Assignment Tracker");
+    private final JLabel title = new JLabel("Assignment Tracker");
     private JPanel titleP = new JPanel();
     private JPanel bottomPanel;
     private JPanel rightPanel = new JPanel();
     private ArrayList<HWAssignment> list = new ArrayList<>();
-    private ArrayList<JPanel> panels = new ArrayList<>();
-    private int numAssignments = database.numItems();
-    private ArrayList<JButton> assignments = new ArrayList<>(numAssignments);
+    private ArrayList<HWAssignment> listForUser = new ArrayList<>();
+    private int totAssignments = database.numItems();
+    private int numAssignments;
     Color customDarkGrey = new Color(43,53,68);
     Color customDark = new Color(37,42,51);
     Color customLightGrey = new Color(109,121,140);
-    private String[] months = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-    private String[] days = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
-    private String[] years = new String[]{"2019", "2020", "2021", "2022", "2023", "2024", "2025"};
+    Color spray = new Color(129, 207, 224);
+    private final String[] months = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+    private final String[] days = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"};
+    private final String[] years = new String[]{"2019", "2020", "2021", "2022", "2023", "2024", "2025"};
     private String dueMonth;
     private String dueDay;
     private String dueYear;
     private String reminderDueMonth;
     private String reminderDueDay;
     private String reminderDueYear;
+    public String username;
+    private JList assignmentList;
+    private Popup p;
+    private LoginForm login;
+    private int index;
     JComboBox monthMenu = new JComboBox(months);
     JComboBox daysMenu = new JComboBox(days);
     JComboBox yearMenu = new JComboBox(years);
@@ -56,22 +63,15 @@ public class FinalProject{
     JComboBox reminderYearMenu = new JComboBox(years);
     
     
-    public FinalProject()
+    public FinalProject(String user)
     {
-        
-        JOptionPane.showMessageDialog(null, numAssignments);
+        username = user;
         frame.setTitle("Homework Planner");
         frame.setSize(1920, 1080);
 
         // Specify what happens when the close button is clicked.
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-
-        //build the middle panel to hold the TicTacToe buttons
-        //buildMiddlePanel();
-
-        //build the panel to hold player info
-        //buildPlayerPanel();
 
         //build bottom panel to hold 3 status buttons and status bar
         titleP.setBackground(customLightGrey);
@@ -84,9 +84,6 @@ public class FinalProject{
         buildRightPanel();
         centerPanel.setBackground(Color.black);
         buildCenterPanel();
-        // Add the info to the window
-        //add(panel, BorderLayout.CENTER);
-        //add(playerPanel, BorderLayout.NORTH); // adds the two player panels
         frame.add(centerPanel, BorderLayout.CENTER);
         frame.add(rightPanel, BorderLayout.EAST);
         frame.add(bottomPanel, BorderLayout.SOUTH);
@@ -95,12 +92,16 @@ public class FinalProject{
         frame.setVisible(true);   
     }
     
+    
+    
     private void buildBottomPanel()
     {
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new GridLayout(2, 1));
         addAssignment = new JButton("Add New Assignment");
-        removeAssignment = new JButton("Delete Assignent");
+        addAssignment.setBackground(spray);
+        removeAssignment = new JButton("Delete Assignment");
+        removeAssignment.setBackground(spray);
         addAssignment.addActionListener(new ButtonListener());
         removeAssignment.addActionListener(new ButtonListener());
         bottomPanel.add(addAssignment);
@@ -111,19 +112,22 @@ public class FinalProject{
     {
         
         JLabel label1 = new JLabel("Assignment Name: ");
-        JLabel label2 = new JLabel("User: ");
         JLabel label3 = new JLabel("Due Date (MMDDYYYY): ");
-        JLabel label4 = new JLabel("Subject: ");
+        JLabel label4 = new JLabel("Course: ");
         JLabel label5 = new JLabel("Description (Optional): ");
         JLabel label6 = new JLabel("Reminder Date (Optional, MMDDYYYY): ");
+        label1.setForeground(Color.WHITE);
+        label3.setForeground(Color.WHITE);
+        label4.setForeground(Color.WHITE);
+        label5.setForeground(Color.WHITE);
+        label6.setForeground(Color.WHITE);
         assignmentNameInput = new JTextField();
-        assignmentUserInput = new JTextField();
-        assignmentDueDateInput = new JTextField();
         assignmentSubjectInput = new JTextField();
         assignmentDescriptionInput = new JTextField();
-        assignmentReminderDateInput = new JTextField();
         JPanel datePanel = new JPanel();
+        datePanel.setBackground(Color.DARK_GRAY);
         JPanel reminderDatePanel = new JPanel();
+        reminderDatePanel.setBackground(Color.DARK_GRAY);
         
         datePanel.add(monthMenu);
         datePanel.add(daysMenu);
@@ -139,13 +143,12 @@ public class FinalProject{
         reminderMonthMenu.addActionListener(new comboListenr());
         reminderDaysMenu.addActionListener(new comboListenr());
         reminderYearMenu.addActionListener(new comboListenr());
-       
-        rightPanel.setBorder(BorderFactory.createTitledBorder("Add New Assignment"));
+        
+        rightPanel.setBorder(BorderFactory.createTitledBorder("Add New Assingment"));
+        rightPanel.setBackground(Color.DARK_GRAY);
         rightPanel.setLayout(new GridLayout(6, 2));
         rightPanel.add(label1);
         rightPanel.add(assignmentNameInput);
-        rightPanel.add(label2);
-        rightPanel.add(assignmentUserInput);
         rightPanel.add(label3);
         rightPanel.add(datePanel);
         rightPanel.add(label4);
@@ -165,41 +168,90 @@ public class FinalProject{
         centerPanel.setBackground(customDarkGrey);
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(1, 6));
+        panel.setBackground(Color.DARK_GRAY);
         String sName;
-        String sUser;
+        String sCourse;
         String sTotal;
         String sDueDate;
-        String[] all = new String[numAssignments];
+        String[] all;
+        numAssignments = 0;
+        
+        for(int i = 0; i < totAssignments; i++)
+        {
+            if(list.get(i).getUser().equals(username))
+            {
+                listForUser.add(numAssignments, list.get(i));
+                numAssignments++;
+            }
+            
+        }
         
         
-        
-        JLabel name;
-        JLabel dueDate;
-        JLabel user;
-        JLabel subject;
-        JLabel description;
-        JLabel reminderDate;
-        
-        
+        all = new String[numAssignments];
         for(int i = 0; i < numAssignments; i++)
         {
             panel = new JPanel();
             panel.setBackground(customLightGrey);
-            sName = "                    Assignment: " + list.get(i).getName();
-            sDueDate = "Due Date: " + list.get(i).getDate();
-            sUser = "      User: " + list.get(i).getUser();
-            sTotal = sDueDate + sName + sUser;
+            sName = "                    Assignment: " + listForUser.get(i).getName();
+            sDueDate = "Due Date: " + listForUser.get(i).getDate();
+            sCourse = "      Course: " + listForUser.get(i).getSubject();
+            sTotal = sDueDate + sName + sCourse;
             all[i] = sTotal;
         }
         
-        JList list = new JList(all);
-        list.setBackground(customDarkGrey);
-        list.setForeground(Color.white);
-        list.setPreferredSize(new Dimension(600, 800));
-        list.setFont(new Font("Helvetica",Font.BOLD,20));
-        JScrollPane sp = new JScrollPane(list);
+        assignmentList = new JList(all);
+        assignmentList.setBackground(Color.DARK_GRAY);
+        assignmentList.setForeground(Color.white);
+        assignmentList.setPreferredSize(new Dimension(600, 800));
+        assignmentList.setFont(new Font("Helvetica",Font.BOLD,20));
+        assignmentList.addListSelectionListener(new assignmentListListener());
+        JScrollPane sp = new JScrollPane(assignmentList);
         sp.setPreferredSize(new Dimension(800, 800));
         centerPanel.add(sp);
+    }
+    
+    private class assignmentListListener implements ListSelectionListener{
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            if(index != assignmentList.getSelectedIndex())
+            {
+                index = assignmentList.getSelectedIndex();
+                //JOptionPane.showMessageDialog(null, index);
+
+                JFrame f = new JFrame("Selected Assignment");
+                JPanel panel = new JPanel();
+                panel.setLayout(new GridLayout(6,1));
+                JLabel name = new JLabel("Assignment: " + listForUser.get(index).getName());
+                JLabel dueDate = new JLabel("Due Date: " + listForUser.get(index).getDate());
+                JLabel subject = new JLabel("Course: " + listForUser.get(index).getSubject());
+                JLabel description = new JLabel("Description: " + listForUser.get(index).getDescription());
+                JLabel reminderDate = new JLabel("Reminder Date: " + listForUser.get(index).getReminderDate());
+                name.setFont(new Font("Helvetica", Font.BOLD,20));
+                name.setForeground(Color.white);
+                dueDate.setFont(new Font("Helvetica", Font.BOLD,20));
+                dueDate.setForeground(Color.white);
+                subject.setFont(new Font("Helvetica", Font.BOLD,20));
+                subject.setForeground(Color.white);
+                description.setFont(new Font("Helvetica", Font.BOLD,20));
+                description.setForeground(Color.white);
+                reminderDate.setFont(new Font("Helvetica", Font.BOLD,20));
+                reminderDate.setForeground(Color.white);
+                panel.add(name);
+                panel.add(dueDate);
+                panel.add(subject);
+                panel.add(description);
+                panel.add(reminderDate);
+                f.setSize(400,400);
+                PopupFactory pf = new PopupFactory();
+                panel.setBackground(customDarkGrey);
+                panel.setForeground(Color.white);
+                p = pf.getPopup(f, panel, 600, 600);
+                f.add(panel);
+                f.show();
+            }
+        }
+        
     }
     
     private class comboListenr implements ActionListener
@@ -225,29 +277,29 @@ public class FinalProject{
             String actionCommand = e.getActionCommand();
             switch (actionCommand){
                 case "Add New Assignment":
-                    if(assignmentNameInput.getText().equals("") || assignmentUserInput.getText().equals("") || assignmentSubjectInput.getText().equals(""))
+                    if(assignmentNameInput.getText().equals("") || username.equals("") || assignmentSubjectInput.getText().equals(""))
                     {
                         JOptionPane.showMessageDialog(null, "Non-optional fields must be filled out!", "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                     else
                     {
-                        database.insert(assignmentUserInput.getText(), assignmentNameInput.getText(), assignmentSubjectInput.getText(), dueMonth + "/" + dueDay + "/" + dueYear, reminderDueMonth + "/" + reminderDueDay + "/" + reminderDueYear, assignmentDescriptionInput.getText());
-                        numAssignments = database.numItems();
+                        database.insert(username, assignmentNameInput.getText(), assignmentSubjectInput.getText(), dueMonth + "/" + dueDay + "/" + dueYear, reminderDueMonth + "/" + reminderDueDay + "/" + reminderDueYear, assignmentDescriptionInput.getText());
+                        totAssignments = database.numItems();
                         frame.remove(centerPanel);
                         buildCenterPanel();
                         frame.add(centerPanel, BorderLayout.CENTER);
                         frame.setVisible(true);
                     }
                         break;
-                case "Delete Assignent":
+                case "Delete Assignment":
                     if(assignmentNameInput.getText().equals(""))
                     {
                         JOptionPane.showMessageDialog(null, "Non-optional fields must be filled out!", "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                     else
                     {
-                        database.delete(assignmentNameInput.getText());
-                        numAssignments = database.numItems();
+                        database.delete(assignmentNameInput.getText(), username);
+                        totAssignments = database.numItems(); 
                         frame.remove(centerPanel);
                         buildCenterPanel();
                         frame.add(centerPanel, BorderLayout.CENTER);
@@ -272,7 +324,6 @@ public class FinalProject{
     
     public static void main(String[] args) {
         new LoginForm();
-        //new FinalProject();
     }
     
 }
